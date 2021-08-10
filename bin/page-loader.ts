@@ -2,6 +2,8 @@
 
 import { Command } from 'commander'
 
+import pageLoader from '../src/pageLoader.js'
+
 const CWD = process.cwd()
 const program = new Command()
 
@@ -13,9 +15,9 @@ program
 program
     .argument('url')
     .action((url, options) => {
-        console.log('url', url)
-        console.log('options', options)
+        const filePath = pageLoader(url, options.output)
 
+        console.log(filePath)
     })
 
 program.parse(process.argv)

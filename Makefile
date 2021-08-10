@@ -1,8 +1,14 @@
+FILEPATH=$(CURDIR)/dist/bin/page-loader.js
+LINKPATH=~/.local/bin/page-loader
+
 install:
 	yarn install
 
 dev:
 	yarn tsc --watch
+
+compile:
+	yarn tsc
 
 start:
 	yarn node dist/bin/page-loader.js $(ARGS)
@@ -11,10 +17,10 @@ test:
 	yarn jest
 
 unlink:
-	rm ~/.local/bin/page-loader
+	[ -f $(LINKPATH) ] && rm $(LINKPATH)
 
 link: unlink
-	ln -s $(CURDIR)/dist/bin/page-loader.js ~/.local/bin/page-loader
+	ln -s $(FILEPATH) $(LINKPATH)
 
 
 .PHONY: test
