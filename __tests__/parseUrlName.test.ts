@@ -2,7 +2,7 @@ import ParseUrlName from '../src/parseUrlName'
 
 const urlList = [
     [
-        'base',
+        'https protocol',
         'https://ru.hexlet.io/courses',
         'ru-hexlet-io-courses.html'
     ],
@@ -42,7 +42,7 @@ const urlList = [
         'ru-hexlet-io-courses.html'
     ],
     [
-        'only domain',
+        'hostname',
         'hexlet.io/courses',
         'hexlet-io-courses.html'
     ],
