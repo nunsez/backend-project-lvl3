@@ -1,8 +1,8 @@
 {
   "name": "backend-project-lvl3",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Page Loader",
-  "main": "",
+  "main": "dist/src/index.js",
   "type": "module",
   "repository": "https://github.com/nunsez/backend-project-lvl3.git",
   "author": "Alexander Mandrikov <mad.nunsez@gmail.com>",

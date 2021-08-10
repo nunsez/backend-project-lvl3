@@ -2,7 +2,7 @@
 
 import { Command } from 'commander'
 
-import pageLoader from '../src/pageLoader.js'
+import pageLoader from '../src/index.js'
 
 const CWD = process.cwd()
 const program = new Command()
@@ -14,8 +14,8 @@ program
 
 program
     .argument('url')
-    .action((url, options) => {
-        const filePath = pageLoader(url, options.output)
+    .action(async (url, options) => {
+        const filePath = await pageLoader(url, options.output)
 
         console.log(filePath)
     })
