@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { Command } from 'commander'
+import { Command, CommandOptions as DefaultCommandOptions } from 'commander'
 
 import pageLoader from '../src/index.js'
 
@@ -12,9 +12,13 @@ program
     .description('Page loader utility')
     .option('-o, --output [dir]', 'output dir', CWD)
 
+interface CommandOptions extends DefaultCommandOptions {
+    output: string
+}
+
 program
     .argument('url')
-    .action(async (url, options) => {
+    .action(async (url: string, options: CommandOptions) => {
         const filePath = await pageLoader(url, options.output)
 
         console.log(filePath)
