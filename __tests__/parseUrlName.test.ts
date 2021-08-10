@@ -34,7 +34,7 @@ const urlList = [
     [
         'without www',
         'https://hexlet.io/courses',
-        'ru-hexlet-io-courses.html'
+        'hexlet-io-courses.html'
     ],
     [
         'without protocol',
