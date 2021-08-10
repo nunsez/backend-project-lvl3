@@ -14,8 +14,8 @@ program
     .argument('url')
     .action((url, options) => {
         console.log('url', url)
-        console.log('options', options);
+        console.log('options', options)
 
     })
 
-program.parse(process.argv);
+program.parse(process.argv)

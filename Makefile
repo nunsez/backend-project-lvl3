@@ -5,4 +5,9 @@ dev:
 	yarn tsc --watch
 
 start:
-	node dist/bin/page-loader.js $(ARGS)
+	yarn node dist/bin/page-loader.js $(ARGS)
+
+test:
+	yarn jest
+
+.PHONY: test
