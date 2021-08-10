@@ -11,6 +11,10 @@
   "engines": {
     "node": ">= 16.0.0"
   },
+  "jest": {
+    "testEnvironment": "node",
+    "preset": "ts-jest"
+  },
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/commander": "^2.12.2",
