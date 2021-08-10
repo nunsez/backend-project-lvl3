@@ -10,4 +10,11 @@ start:
 test:
 	yarn jest
 
+unlink:
+	rm ~/.local/bin/page-loader
+
+link: unlink
+	ln -s $(CURDIR)/dist/bin/page-loader.js ~/.local/bin/page-loader
+
+
 .PHONY: test
