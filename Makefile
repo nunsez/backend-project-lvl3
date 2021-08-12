@@ -21,10 +21,10 @@ test:
 	yarn jest --watch
 
 unlink:
-	if [ -f $(LINKPATH) ]; then rm $(LINKPATH); fi
+	yarn unlink
 
 link: unlink
-	ln -s $(FILEPATH) $(LINKPATH)
+	yarn link
 
 
 .PHONY: test
