@@ -1,55 +1,55 @@
 import ParseUrlName from '../src/parseUrlName'
 
-const urlList = [
-    [
-        'https protocol',
-        'https://ru.hexlet.io/courses',
-        'ru-hexlet-io-courses.html'
-    ],
-    [
-        'http protocol',
-        'http://ru.hexlet.io/courses',
-        'ru-hexlet-io-courses.html'
-    ],
-    [
-        'ends with .html',
-        'https://ru.hexlet.io/courses.html',
-        'ru-hexlet-io-courses.html'
-    ],
-    [
-        'ends with dot-something',
-        'https://ru.hexlet.io/courses.php',
-        'ru-hexlet-io-courses-php.html'
-    ],
-    [
-        'special symbol %20',
-        'https://ru.hexlet.io/courses%20space',
-        'ru-hexlet-io-courses-space.html'
-    ],
-    [
-        'special symbols ?, =, -, +, _',
-        'https://ru.hexlet.io/?c=o-urses+sp_ace',
-        'ru-hexlet-io-c-o-urses-sp-ace.html'
-    ],
-    [
-        'without www',
-        'https://hexlet.io/courses',
-        'hexlet-io-courses.html'
-    ],
-    [
-        'without protocol',
-        'ru.hexlet.io/courses',
-        'ru-hexlet-io-courses.html'
-    ],
-    [
-        'hostname',
-        'hexlet.io/courses',
-        'hexlet-io-courses.html'
-    ],
+const testsList = [
+    {
+        testName: 'https protocol',
+        url: 'https://ru.hexlet.io/courses',
+        expectedFileName: 'ru-hexlet-io-courses.html',
+    },
+    {
+        testName: 'http protocol',
+        url: 'http://ru.hexlet.io/courses',
+        expectedFileName: 'ru-hexlet-io-courses.html',
+    },
+    {
+        testName: 'ends with .html',
+        url: 'https://ru.hexlet.io/courses.html',
+        expectedFileName: 'ru-hexlet-io-courses.html',
+    },
+    {
+        testName: 'ends with dot-something',
+        url: 'https://ru.hexlet.io/courses.php',
+        expectedFileName: 'ru-hexlet-io-courses-php.html',
+    },
+    {
+        testName: 'special symbol %20',
+        url: 'https://ru.hexlet.io/courses%20space',
+        expectedFileName: 'ru-hexlet-io-courses-space.html',
+    },
+    {
+        testName: 'special symbols ?, =, -, +, _',
+        url: 'https://ru.hexlet.io/?c=o-urses+sp_ace',
+        expectedFileName: 'ru-hexlet-io-c-o-urses-sp-ace.html',
+    },
+    {
+        testName: 'without www',
+        url: 'https://hexlet.io/courses',
+        expectedFileName: 'hexlet-io-courses.html',
+    },
+    {
+        testName: 'without protocol',
+        url: 'ru.hexlet.io/courses',
+        expectedFileName: 'ru-hexlet-io-courses.html',
+    },
+    {
+        testName: 'hostname',
+        url: 'hexlet.io/courses',
+        expectedFileName: 'hexlet-io-courses.html',
+    },
 ]
 
-test.each(urlList)('%s', (_, url, expected) => {
-    const actual = ParseUrlName(url)
+it.each(testsList)('$testName', ({ url, expectedFileName }) => {
+    const actualFileName = ParseUrlName(url)
 
-    expect(actual).toBe(expected)
+    expect(actualFileName).toEqual(expectedFileName)
 })
