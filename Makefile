@@ -14,6 +14,9 @@ build:
 start:
 	yarn node bin/page-loader.js $(ARGS)
 
+compile:
+	yarn tsc
+
 test:
 	yarn jest --watch
 
