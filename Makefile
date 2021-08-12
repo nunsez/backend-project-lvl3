@@ -1,23 +1,24 @@
-FILEPATH=$(CURDIR)/dist/bin/page-loader.js
+FILEPATH=$(CURDIR)/bin/page-loader.js
 LINKPATH=~/.local/bin/page-loader
+OUTPUTDIR=dist
 
 install:
 	yarn install
 
 dev:
-	yarn tsc --watch
+	yarn babel src -w -d $(OUTPUTDIR) -x ".ts" --delete-dir-on-start --copy-files
 
-compile:
-	yarn tsc
+build:
+	yarn babel src -d $(OUTPUTDIR) -x ".ts" --delete-dir-on-start --copy-files --verbose
 
 start:
-	yarn node dist/bin/page-loader.js $(ARGS)
+	yarn node bin/page-loader.js $(ARGS)
 
 test:
-	yarn jest
+	yarn jest --watch
 
 unlink:
-	[ -f $(LINKPATH) ] && rm $(LINKPATH)
+	if [ -f $(LINKPATH) ]; then rm $(LINKPATH); fi
 
 link: unlink
 	ln -s $(FILEPATH) $(LINKPATH)
