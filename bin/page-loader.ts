@@ -2,7 +2,7 @@
 
 import { Command, CommandOptions as DefaultCommandOptions } from 'commander'
 
-import pageLoader from '../src/index.js'
+import loadPage from '../src/index.js'
 
 const CWD = process.cwd()
 const program = new Command()
@@ -18,10 +18,10 @@ interface CommandOptions extends DefaultCommandOptions {
 
 program
     .argument('url')
-    .action(async (url: string, options: CommandOptions) => {
-        const filePath = await pageLoader(url, options.output)
-
-        console.log(filePath)
+    .action((url: string, options: CommandOptions) => {
+        loadPage(url, options.output)
+            .then((filePath) => console.log(filePath))
+            .catch((error) => console.log(error.message))
     })
 
 program.parse(process.argv)

@@ -1,19 +1,18 @@
 import path from 'path'
 import fsp from 'fs/promises'
-import axios from 'axios'
 
 import parseUrlName from './parseUrlName.js'
+import loadHtml from './loadHtml.js'
 
-const pageLoader = async (url: string, dirName: string) => {
+const pageLoader = (url: string, dirName: string) => {
     const fileName = parseUrlName(url)
     const filePath = path.join(dirName, fileName)
 
-    const response = await axios.get(url)
-    const data = response.data
+    const promise = loadHtml(url)
+        .then((html) => fsp.writeFile(filePath, html, 'utf-8'))
+        .then(() => filePath)
 
-    await fsp.writeFile(filePath, data, 'utf-8')
-
-    return filePath
+    return promise
 }
 
 export default pageLoader
