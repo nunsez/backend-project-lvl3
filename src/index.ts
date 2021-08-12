@@ -1,8 +1,8 @@
 import path from 'path'
 import fsp from 'fs/promises'
 
-import parseUrlName from './parseUrlName.js'
-import loadHtml from './loadHtml.js'
+import parseUrlName from './parseUrlName'
+import loadHtml from './loadHtml'
 
 const pageLoader = (url: string, dirName: string) => {
     const fileName = parseUrlName(url)
