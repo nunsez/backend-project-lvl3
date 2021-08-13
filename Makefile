@@ -1,6 +1,6 @@
 OUTPUTDIR=dist
 
-install: install-deps build link
+install: install-deps build
 
 install-deps:
 	yarn install
