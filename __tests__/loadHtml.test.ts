@@ -2,8 +2,6 @@ import nock from 'nock'
 
 import loadHtml from '../src/loadHtml'
 
-nock.disableNetConnect()
-
 const url = 'http://www.example.com'
 
 const testsList = [
@@ -21,10 +19,14 @@ const testsList = [
     },
 ]
 
-testsList.forEach((opts) => {
-    const { path, status, response } = opts
+beforeAll(() => {
+    nock.disableNetConnect()
 
-    nock(url).get(path).reply(status, response)
+    testsList.forEach((opts) => {
+        const { path, status, response } = opts
+
+        nock(url).get(path).reply(status, response)
+    })
 })
 
 it.each(testsList)('$name', async ({ path, response }) => {
