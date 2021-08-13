@@ -18,6 +18,9 @@ lint:
 	yarn eslint .
 
 test:
+	yarn jest $(args)
+
+TDD:
 	yarn jest --watch
 
 test-coverage:
