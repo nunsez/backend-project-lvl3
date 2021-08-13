@@ -20,6 +20,9 @@ lint:
 test:
 	yarn jest --watch
 
+test-coverage:
+	yarn jest --coverage
+
 unlink:
 	yarn unlink
 
