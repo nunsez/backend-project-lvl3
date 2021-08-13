@@ -27,13 +27,14 @@ const testsList = [
 beforeAll(() => {
     nock.disableNetConnect()
 
+    // eslint-disable-next-line no-shadow
     testsList.forEach(({ path, status, expectedHTML }) => {
         nock(host).get(path).reply(status, expectedHTML)
     })
 })
 
 const dirNamePrefix = 'page-loader-'
-let tempDirName: string;
+let tempDirName: string
 
 beforeEach(async () => {
     const prefixPath = path.join(os.tmpdir(), dirNamePrefix)

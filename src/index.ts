@@ -4,7 +4,7 @@ import fsp from 'fs/promises'
 import parseUrlName from './parseUrlName'
 import loadHtml from './loadHtml'
 
-const pageLoader = (url: string, dirName: string) => {
+const pageLoader = (url: string, dirName: string): Promise<string> => {
     const fileName = parseUrlName(url)
     const filePath = path.join(dirName, fileName)
 

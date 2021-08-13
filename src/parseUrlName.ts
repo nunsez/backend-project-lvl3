@@ -1,4 +1,4 @@
-const parseUrlName = (str: string) => {
+const parseUrlName = (str: string): string => {
     const delimiter = '-'
     const decoded = decodeURI(str)
 
