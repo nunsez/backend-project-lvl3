@@ -6,31 +6,27 @@ import fsp from 'fs/promises'
 import loadPage from '../src'
 
 const host = 'https://ru.hexlet.io'
+const route = '/courses'
+const htmlFileNameBefore = 'https.ru.hexlet.io.courses.html'
+const htmlFileNameAfter = 'ru-hexlet-io-courses.html'
 
-const testsList = [
-    {
-        testName: 'courses page',
-        url: 'https://ru.hexlet.io/courses',
-        path: '/courses',
-        expectedHTML: 'ru-hexlet-io-courses.html',
-        status: 200,
-    },
-    {
-        testName: 'content page',
-        url: 'https://ru.hexlet.io/content',
-        path: '/content',
-        expectedHTML: 'content page',
-        status: 200,
-    },
-]
+const getFixturePath = (...fileNames: string[]): string => {
+    const projectDir = path.resolve()
 
-beforeAll(() => {
+    return path.join(projectDir, '__fixtures__', ...fileNames)
+}
+
+let htmlContentBefore: string
+let htmlContentAfter: string
+
+beforeAll(async () => {
+    const htmlBeforePath = getFixturePath(htmlFileNameBefore)
+    const htmlAfterPath = getFixturePath(htmlFileNameAfter)
+
+    htmlContentBefore = await fsp.readFile(htmlBeforePath, 'utf-8')
+    htmlContentAfter = await fsp.readFile(htmlAfterPath, 'utf-8')
+
     nock.disableNetConnect()
-
-    // eslint-disable-next-line no-shadow
-    testsList.forEach(({ path, status, expectedHTML }) => {
-        nock(host).get(path).reply(status, expectedHTML)
-    })
 })
 
 const dirNamePrefix = 'page-loader-'
@@ -40,11 +36,30 @@ beforeEach(async () => {
     const prefixPath = path.join(os.tmpdir(), dirNamePrefix)
 
     tempDirName = await fsp.mkdtemp(prefixPath)
+
+    nock(host).get(route).reply(200, htmlContentBefore)
 })
 
-it.each(testsList)('$testName', async ({ url, expectedHTML }) => {
+it('only html', async () => {
+    const url = host.concat(route)
     const filePath = await loadPage(url, tempDirName)
     const html = await fsp.readFile(filePath, 'utf-8')
 
-    expect(html).toEqual(expectedHTML)
+    expect(html).toEqual(htmlContentBefore)
+})
+
+it('test asserts: png', async () => {
+    const url = host.concat(route)
+    const filePath = await loadPage(url, tempDirName)
+    const html = await fsp.readFile(filePath, 'utf-8')
+
+    expect(html).toEqual(htmlContentAfter)
+
+    const assetsFolderName = filePath.slice(0, -5).concat('_files')
+    const pngFileName = 'ru-hexlet-io-assets-professions-nodejs.png'
+
+    const pngFilePath = path.join(assetsFolderName, pngFileName)
+    const isPngExist = await fsp.access(pngFilePath)
+
+    expect(isPngExist).toBeUndefined()
 })

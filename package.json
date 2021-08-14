@@ -21,6 +21,7 @@
     "@types/axios": "^0.14.0",
     "@types/commander": "^2.12.2",
     "@types/jest": "^26.0.24",
+    "@types/jsdom": "^16.2.13",
     "@types/nock": "^11.1.0",
     "@types/node": "^16.4.13",
     "@typescript-eslint/eslint-plugin": "latest",
@@ -37,6 +38,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "commander": "^8.1.0"
+    "commander": "^8.1.0",
+    "jsdom": "^17.0.0"
   }
 }
