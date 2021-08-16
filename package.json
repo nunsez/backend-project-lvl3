@@ -1,6 +1,6 @@
 {
   "name": "@hexlet/code",
-  "version": "0.0.5",
+  "version": "0.2.0",
   "description": "Page Loader",
   "main": "dist/index.js",
   "type": "module",
@@ -19,6 +19,7 @@
     "@babel/core": "^7.15.0",
     "@babel/preset-typescript": "^7.15.0",
     "@types/axios": "^0.14.0",
+    "@types/cheerio": "^0.22.30",
     "@types/commander": "^2.12.2",
     "@types/jest": "^26.0.24",
     "@types/nock": "^11.1.0",
@@ -37,6 +38,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.10",
     "commander": "^8.1.0"
   }
 }

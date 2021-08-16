@@ -2,3 +2,5 @@
 /dist
 **.log
 /coverage
+
+testscript.js

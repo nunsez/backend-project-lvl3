@@ -12,14 +12,14 @@ const getFixturePath = (...fileNames: string[]): string => {
 }
 
 let defaultHtmlContent: string
-let defaultImageContent: string
+let defaultImageContent: Buffer
 
 beforeAll(async () => {
     const defaultHtmlPath = getFixturePath('default.html')
     const imagePath = getFixturePath('image.png')
 
     defaultHtmlContent = await fsp.readFile(defaultHtmlPath, 'utf-8')
-    defaultImageContent = await fsp.readFile(imagePath, 'binary')
+    defaultImageContent = await fsp.readFile(imagePath)
 
     nock.disableNetConnect()
 })
@@ -44,12 +44,14 @@ it('http status 200', async () => {
     const expecetImageFileName = 'ru-hexlet-io-assets-professions-nodejs.png'
 
     const imageFilePath = path.join(tempDirName, expectedAssetsDirName, expecetImageFileName)
+    const expectedHtmlFilePath = path.join(tempDirName, expectedHtmlFileName)
 
+    const expectedHtmlContent = await fsp.readFile(getFixturePath(expectedHtmlFileName), 'utf-8')
     const actualHtmlFilePath = await loadPage('https://ru.hexlet.io/courses', tempDirName)
     const actualHtmlContent = await fsp.readFile(actualHtmlFilePath, 'utf-8')
-    const actualImageContent = await fsp.readFile(imageFilePath, 'binary')
+    const actualImageContent = await fsp.readFile(imageFilePath)
 
-    expect(actualHtmlFilePath).toEqual(expectedHtmlFileName)
-    expect(actualHtmlContent).toEqual(defaultHtmlContent)
+    expect(actualHtmlFilePath).toEqual(expectedHtmlFilePath)
+    expect(actualHtmlContent).toEqual(expectedHtmlContent)
     expect(actualImageContent).toEqual(defaultImageContent)
 })
