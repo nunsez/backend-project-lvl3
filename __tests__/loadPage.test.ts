@@ -5,26 +5,21 @@ import fsp from 'fs/promises'
 
 import loadPage from '../src'
 
-const host = 'https://ru.hexlet.io'
-const route = '/courses'
-const htmlFileNameBefore = 'https.ru.hexlet.io.courses.html'
-const htmlFileNameAfter = 'ru-hexlet-io-courses.html'
-
 const getFixturePath = (...fileNames: string[]): string => {
     const projectDir = path.resolve()
 
     return path.join(projectDir, '__fixtures__', ...fileNames)
 }
 
-let htmlContentBefore: string
-let htmlContentAfter: string
+let defaultHtmlContent: string
+let defaultImageContent: string
 
 beforeAll(async () => {
-    const htmlBeforePath = getFixturePath(htmlFileNameBefore)
-    const htmlAfterPath = getFixturePath(htmlFileNameAfter)
+    const defaultHtmlPath = getFixturePath('default.html')
+    const imagePath = getFixturePath('image.png')
 
-    htmlContentBefore = await fsp.readFile(htmlBeforePath, 'utf-8')
-    htmlContentAfter = await fsp.readFile(htmlAfterPath, 'utf-8')
+    defaultHtmlContent = await fsp.readFile(defaultHtmlPath, 'utf-8')
+    defaultImageContent = await fsp.readFile(imagePath, 'binary')
 
     nock.disableNetConnect()
 })
@@ -34,32 +29,27 @@ let tempDirName: string
 
 beforeEach(async () => {
     const prefixPath = path.join(os.tmpdir(), dirNamePrefix)
-
     tempDirName = await fsp.mkdtemp(prefixPath)
-
-    nock(host).get(route).reply(200, htmlContentBefore)
 })
 
-it('only html', async () => {
-    const url = host.concat(route)
-    const filePath = await loadPage(url, tempDirName)
-    const html = await fsp.readFile(filePath, 'utf-8')
+it('http status 200', async () => {
+    nock('https://ru.hexlet.io')
+        .get('/courses')
+        .reply(200, defaultHtmlContent)
+        .get('/assets/professions/nodejs.png')
+        .reply(200, defaultImageContent)
 
-    expect(html).toEqual(htmlContentBefore)
-})
+    const expectedHtmlFileName = 'ru-hexlet-io-courses.html'
+    const expectedAssetsDirName = 'ru-hexlet-io-courses_files'
+    const expecetImageFileName = 'ru-hexlet-io-assets-professions-nodejs.png'
 
-it('test asserts: png', async () => {
-    const url = host.concat(route)
-    const filePath = await loadPage(url, tempDirName)
-    const html = await fsp.readFile(filePath, 'utf-8')
+    const imageFilePath = path.join(tempDirName, expectedAssetsDirName, expecetImageFileName)
 
-    expect(html).toEqual(htmlContentAfter)
+    const actualHtmlFilePath = await loadPage('https://ru.hexlet.io/courses', tempDirName)
+    const actualHtmlContent = await fsp.readFile(actualHtmlFilePath, 'utf-8')
+    const actualImageContent = await fsp.readFile(imageFilePath, 'binary')
 
-    const assetsFolderName = filePath.slice(0, -5).concat('_files')
-    const pngFileName = 'ru-hexlet-io-assets-professions-nodejs.png'
-
-    const pngFilePath = path.join(assetsFolderName, pngFileName)
-    const isPngExist = await fsp.access(pngFilePath)
-
-    expect(isPngExist).toBeUndefined()
+    expect(actualHtmlFilePath).toEqual(expectedHtmlFileName)
+    expect(actualHtmlContent).toEqual(defaultHtmlContent)
+    expect(actualImageContent).toEqual(defaultImageContent)
 })
