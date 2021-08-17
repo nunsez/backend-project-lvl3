@@ -7,12 +7,12 @@ import { parseUrlFromString, parseUrlName } from './utils'
 
 interface IAsset {
     route: string
-    uri: string
+    uri: URL
     path: string
 }
 
 const loadAsset = (dirName: string) => (asset: IAsset) => axios
-    .get(asset.uri, { responseType: 'arraybuffer' })
+    .get(asset.uri.href, { responseType: 'arraybuffer' })
     .then(({ data }) => {
         const assetPath = path.join(dirName, asset.path)
         console.log(asset.uri)
@@ -31,11 +31,12 @@ const handleAssets = (
         const { src } = (el as cheerio.TagElement).attribs
         routes.push(src)
     })
+    console.log($.html())
 
     const assetsList: IAsset[] = routes.map((route) => {
         const ext = path.extname(route)
-        const uri = url.origin.concat(route)
-        const assetName = parseUrlName(new URL(uri), ext)
+        const uri = new URL(route, url)
+        const assetName = parseUrlName(uri, ext)
         const assetPath = path.join(assetsDirName, assetName)
 
         return { route, uri, path: assetPath }
