@@ -15,7 +15,7 @@ const loadAsset = (dirName: string) => (asset: IAsset) => axios
     .get(asset.uri.href, { responseType: 'arraybuffer' })
     .then(({ data }) => {
         const assetPath = path.join(dirName, asset.path)
-        console.log(asset.uri)
+        console.log(asset.uri.href)
 
         return fsp.writeFile(assetPath, data)
     })
@@ -31,7 +31,6 @@ const handleAssets = (
         const { src } = (el as cheerio.TagElement).attribs
         routes.push(src)
     })
-    console.log($.html())
 
     const assetsList: IAsset[] = routes.map((route) => {
         const ext = path.extname(route)
