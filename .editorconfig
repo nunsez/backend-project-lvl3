@@ -4,6 +4,9 @@ root = true
 end_of_line = lf
 insert_final_newline = true
 
+[__fixtures__/**]
+insert_final_newline = unset
+
 [Makefile]
 indent_style = tab
 
