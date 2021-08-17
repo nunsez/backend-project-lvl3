@@ -33,7 +33,9 @@ const handleAssets = (html: string, url: URL, assetsDirName: string) => {
     tags.forEach((tag) => {
         $(tag).each((_, el) => {
             const sourceAttrName = tagSourceMap[tag]
-            const { [sourceAttrName]: route } = (el as cheerio.TagElement).attribs
+            const route = $(el).attr(sourceAttrName)
+
+            if (!route) return
 
             let ext = '.html'
             ext = path.extname(route) || ext
