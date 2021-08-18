@@ -1,9 +1,13 @@
 import path from 'path'
 import fsp from 'fs/promises'
 import axios from 'axios'
+import 'axios-debug-log'
 import cheerio from 'cheerio'
+import debug from 'debug'
 
 import { parseUrlFromString, parseUrlName } from './utils'
+
+const log = debug('page-loader')
 
 interface IAsset {
     uri: URL;
@@ -15,6 +19,7 @@ const loadAsset = (dirName: string) => (asset: IAsset) => axios
     .then(({ data }) => {
         const assetPath = path.join(dirName, asset.path)
         console.log(asset.uri.href)
+        log('Asset path:', assetPath)
 
         return fsp.writeFile(assetPath, data)
     })
@@ -64,6 +69,9 @@ const loadPage = (urlStr: string, dirName: string): Promise<string> => {
     const assetsDirName = parseUrlName(url, '_files')
     const assetsDirPath = path.join(dirName, assetsDirName)
 
+    log('\nDownload html from:', url.href, '\nTo path:', htmlPath)
+    log('\nAssets dir path:', assetsDirPath)
+
     let assetsList: IAsset[]
 
     const promise = axios.get(url.href)
@@ -71,6 +79,8 @@ const loadPage = (urlStr: string, dirName: string): Promise<string> => {
             const { data: html } = response
             const meta = handleAssets(html, url, assetsDirName)
             assetsList = meta.assetsList
+
+            log('\nAssets list:', assetsList.map(({ uri }) => uri.href))
 
             return fsp.writeFile(htmlPath, meta.newHtml, 'utf-8')
         })

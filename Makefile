@@ -1,5 +1,6 @@
 OUTPUTDIR=dist
 
+
 install: install-deps build
 
 install-deps:
@@ -18,10 +19,10 @@ lint:
 	yarn eslint .
 
 test:
-	yarn jest $(args)
+	DEBUG=$(debug) yarn jest $(args)
 
 TDD:
-	yarn jest --watch
+	DEBUG=$(debug) yarn jest --watch
 
 test-coverage:
 	yarn jest --coverage
