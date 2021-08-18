@@ -17,7 +17,7 @@ const defaultScriptContent = '(() => {})()'
 const defaultStyleContent = 'body {}'
 
 const dirNamePrefix = 'page-loader-'
-let tempDirName: string
+let tempDirPath: string
 
 beforeAll(async () => {
     const defaultHtmlPath = getFixturePath('default.html')
@@ -31,7 +31,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     const prefixPath = path.join(os.tmpdir(), dirNamePrefix)
-    tempDirName = await fsp.mkdtemp(prefixPath)
+    tempDirPath = await fsp.mkdtemp(prefixPath)
 })
 
 describe('http workflow', () => {
@@ -49,17 +49,18 @@ describe('http workflow', () => {
 
         const expectedHtmlFileName = 'ru-hexlet-io-courses.html'
         const expectedAssetsDirName = 'ru-hexlet-io-courses_files'
+        const customDirPath = path.join(tempDirPath, 'mypath')
 
         const expectedHtmlContent = await fsp.readFile(getFixturePath(expectedHtmlFileName), 'utf-8')
 
-        const expectedHtmlFilePath = path.join(tempDirName, expectedHtmlFileName)
-        const expectedAssetsDirPath = path.join(tempDirName, expectedAssetsDirName)
+        const expectedHtmlFilePath = path.join(customDirPath, expectedHtmlFileName)
+        const expectedAssetsDirPath = path.join(customDirPath, expectedAssetsDirName)
 
         const expectedImageFilePath = path.join(expectedAssetsDirPath, 'ru-hexlet-io-assets-professions-nodejs.png')
         const expectedStyleFilePath = path.join(expectedAssetsDirPath, 'ru-hexlet-io-assets-application.css')
         const expectedScriptFilePath = path.join(expectedAssetsDirPath, 'ru-hexlet-io-packs-js-runtime.js')
 
-        const actualHtmlFilePath = await loadPage('https://ru.hexlet.io/courses', tempDirName)
+        const actualHtmlFilePath = await loadPage('https://ru.hexlet.io/courses', customDirPath)
         const actualHtmlContent = await fsp.readFile(actualHtmlFilePath, 'utf-8')
         const actualImageContent = await fsp.readFile(expectedImageFilePath)
         const actualStyleContent = await fsp.readFile(expectedStyleFilePath, 'utf-8')
@@ -75,9 +76,17 @@ describe('http workflow', () => {
     it('status 404', async () => {
         nock('https://ru.hexlet.io').get('/').reply(404)
 
-        const promise = loadPage('https://ru.hexlet.io/', tempDirName)
+        const promise = loadPage('https://ru.hexlet.io/', tempDirPath)
 
-        await expect(promise).rejects.toThrowError()
+        await expect(promise).rejects.toThrowError('404')
+    })
+
+    it('File system access denied', async () => {
+        nock(/anything/).get('/').reply(200)
+
+        const promise = loadPage('anything', '/sys')
+
+        await expect(promise).rejects.toThrowError('EACCES')
     })
 })
 
