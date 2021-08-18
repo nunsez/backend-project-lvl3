@@ -69,22 +69,23 @@ const loadPage = (urlStr: string, dirName: string): Promise<string> => {
     const assetsDirName = parseUrlName(url, '_files')
     const assetsDirPath = path.join(dirName, assetsDirName)
 
-    log('\nDownload html from:', url.href, '\nTo path:', htmlPath)
-    log('\nAssets dir path:', assetsDirPath)
-
     let assetsList: IAsset[]
 
-    const promise = axios.get(url.href)
+    const promise = fsp.mkdir(dirName, { recursive: true })
+        .then(() => log('Directory has beed created at path:', dirName))
+        .then(() => axios.get(url.href))
         .then((response) => {
             const { data: html } = response
             const meta = handleAssets(html, url, assetsDirName)
             assetsList = meta.assetsList
 
-            log('\nAssets list:', assetsList.map(({ uri }) => uri.href))
+            log('Assets list:', assetsList.map(({ uri }) => uri.href))
 
             return fsp.writeFile(htmlPath, meta.newHtml, 'utf-8')
         })
+        .then(() => log('Html has beed downloaded from:', url.href, '\nTo path:', htmlPath))
         .then(() => fsp.mkdir(assetsDirPath))
+        .then(() => log('Assets directory has been created at path:', assetsDirPath))
         .then(() => {
             const promises = assetsList.map(loadAsset(dirName))
             return Promise.all(promises)
