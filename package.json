@@ -1,6 +1,6 @@
 {
   "name": "@hexlet/code",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Page Loader",
   "main": "dist/index.js",
   "type": "module",

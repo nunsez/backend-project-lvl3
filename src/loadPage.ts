@@ -2,64 +2,19 @@ import path from 'path'
 import fsp from 'fs/promises'
 import axios from 'axios'
 import 'axios-debug-log'
-import cheerio from 'cheerio'
 import debug from 'debug'
 import Listr from 'listr'
 
-import { parseUrlFromString, parseUrlName } from './utils'
+import * as utils from './utils'
 
 const log = debug('page-loader')
 
-const loadAsset = (asset: IAsset, dirName: string) => axios
-    .get(asset.uri.href, { responseType: 'arraybuffer' })
-    .then(({ data }) => {
-        const assetPath = path.join(dirName, asset.path)
-        log('Asset path:', assetPath)
-
-        return fsp.writeFile(assetPath, data)
-    })
-
-const handleAssets = (html: string, url: URL, assetsDirName: string) => {
-    const $ = cheerio.load(html)
-    const assetsList: IAsset[] = []
-    const tagSourceMap = {
-        img: 'src',
-        link: 'href',
-        script: 'src',
-    } as const
-
-    const tags = Object.keys(tagSourceMap) as (keyof typeof tagSourceMap)[]
-
-    tags.forEach((tag) => {
-        $(tag).each((_, el) => {
-            const sourceAttrName = tagSourceMap[tag]
-            const route = $(el).attr(sourceAttrName)
-
-            if (!route) return
-
-            let ext = '.html'
-            ext = path.extname(route) || ext
-
-            const uri = new URL(route, url)
-            const assetName = parseUrlName(uri, ext)
-            const assetPath = path.join(assetsDirName, assetName)
-
-            if (uri.hostname === url.hostname) {
-                assetsList.push({ uri, path: assetPath })
-                $(el).attr(sourceAttrName, assetPath)
-            }
-        })
-    })
-
-    return { newHtml: $.html(), assetsList }
-}
-
 const loadPage = (urlStr: string, dirName: string): Promise<string> => {
-    const url = parseUrlFromString(urlStr)
+    const url = utils.parseUrlFromString(urlStr)
 
-    const htmlName = parseUrlName(url, '.html')
+    const htmlName = utils.parseUrlName(url, '.html')
     const htmlPath = path.join(dirName, htmlName)
-    const assetsDirName = parseUrlName(url, '_files')
+    const assetsDirName = utils.parseUrlName(url, '_files')
     const assetsDirPath = path.join(dirName, assetsDirName)
 
     let assetsList: IAsset[]
@@ -69,7 +24,7 @@ const loadPage = (urlStr: string, dirName: string): Promise<string> => {
         .then(() => axios.get(url.href))
         .then((response) => {
             const { data: html } = response
-            const meta = handleAssets(html, url, assetsDirName)
+            const meta = utils.handleAssets(html, url, assetsDirName)
             assetsList = meta.assetsList
 
             log('Assets list:', assetsList.map(({ uri }) => uri.href))
@@ -82,7 +37,7 @@ const loadPage = (urlStr: string, dirName: string): Promise<string> => {
         .then(() => {
             const tasks = new Listr(assetsList.map((asset) => {
                 const title = asset.uri.href
-                const task = () => loadAsset(asset, dirName)
+                const task = () => utils.loadAsset(asset, dirName)
 
                 return { title, task }
             }))
