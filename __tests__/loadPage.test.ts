@@ -1,3 +1,5 @@
+/* eslint-disable newline-per-chained-call */
+
 import nock from 'nock'
 import path from 'path'
 import os from 'os'
@@ -37,25 +39,17 @@ beforeEach(async () => {
 describe('http workflow', () => {
     it('status 200', async () => {
         nock('https://ru.hexlet.io')
-            .get('/courses')
-            .twice()
-            .reply(200, defaultHtmlContent)
-            .get('/assets/professions/nodejs.png')
-            .reply(200, defaultImageContent)
-            .get('/assets/application.css')
-            .reply(200, defaultStyleContent)
-            .get('/packs/js/runtime.js')
-            .reply(200, defaultScriptContent)
+            .get('/courses').twice().reply(200, defaultHtmlContent)
+            .get('/assets/professions/nodejs.png').reply(200, defaultImageContent)
+            .get('/assets/application.css').reply(200, defaultStyleContent)
+            .get('/packs/js/runtime.js').reply(200, defaultScriptContent)
 
         const expectedHtmlFileName = 'ru-hexlet-io-courses.html'
-        const expectedAssetsDirName = 'ru-hexlet-io-courses_files'
-        const customDirPath = path.join(tempDirPath, 'mypath')
-
         const expectedHtmlContent = await fsp.readFile(getFixturePath(expectedHtmlFileName), 'utf-8')
 
+        const customDirPath = path.join(tempDirPath, 'mypath')
         const expectedHtmlFilePath = path.join(customDirPath, expectedHtmlFileName)
-        const expectedAssetsDirPath = path.join(customDirPath, expectedAssetsDirName)
-
+        const expectedAssetsDirPath = path.join(customDirPath, 'ru-hexlet-io-courses_files')
         const expectedImageFilePath = path.join(expectedAssetsDirPath, 'ru-hexlet-io-assets-professions-nodejs.png')
         const expectedStyleFilePath = path.join(expectedAssetsDirPath, 'ru-hexlet-io-assets-application.css')
         const expectedScriptFilePath = path.join(expectedAssetsDirPath, 'ru-hexlet-io-packs-js-runtime.js')
@@ -74,9 +68,9 @@ describe('http workflow', () => {
     })
 
     it('status 404', async () => {
-        nock('https://ru.hexlet.io').get('/').reply(404)
+        nock(/anything/).get('/').reply(404)
 
-        const promise = loadPage('https://ru.hexlet.io/', tempDirPath)
+        const promise = loadPage('anything', tempDirPath)
 
         await expect(promise).rejects.toThrowError('404')
     })
@@ -87,6 +81,13 @@ describe('http workflow', () => {
         const promise = loadPage('anything', '/sys')
 
         await expect(promise).rejects.toThrowError('EACCES')
+    })
+
+    it('File already exist', async () => {
+        nock(/anything/).get('/').twice().reply(200, '<!DOCTYPE html>')
+        await loadPage('anything', tempDirPath)
+
+        await expect(loadPage('anything', tempDirPath)).rejects.toThrowError('EEXIST')
     })
 })
 
