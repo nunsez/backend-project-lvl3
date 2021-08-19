@@ -49,9 +49,8 @@ describe('http workflow', () => {
             getFixturePath(expectedHtmlFileName), 'utf-8',
         )
 
-        const customDirPath = path.join(tempDirPath, 'mypath')
-        const expectedHtmlFilePath = path.join(customDirPath, expectedHtmlFileName)
-        const expectedAssetsDirPath = path.join(customDirPath, 'ru-hexlet-io-courses_files')
+        const expectedHtmlFilePath = path.join(tempDirPath, expectedHtmlFileName)
+        const expectedAssetsDirPath = path.join(tempDirPath, 'ru-hexlet-io-courses_files')
         const expectedImageFilePath = path.join(
             expectedAssetsDirPath, 'ru-hexlet-io-assets-professions-nodejs.png',
         )
@@ -62,7 +61,7 @@ describe('http workflow', () => {
             expectedAssetsDirPath, 'ru-hexlet-io-packs-js-runtime.js',
         )
 
-        const actualHtmlFilePath = await loadPage('https://ru.hexlet.io/courses', customDirPath)
+        const actualHtmlFilePath = await loadPage('https://ru.hexlet.io/courses', tempDirPath)
         const actualHtmlContent = await fsp.readFile(actualHtmlFilePath, 'utf-8')
         const actualImageContent = await fsp.readFile(expectedImageFilePath)
         const actualStyleContent = await fsp.readFile(expectedStyleFilePath, 'utf-8')

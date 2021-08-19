@@ -15,9 +15,7 @@ const loadPage = (urlStr: string, rootDirName: string): Promise<string> => {
     let assetsDirPath: string
     let assetsList: IAsset[]
 
-    return fsp.mkdir(rootDirName, { recursive: true })
-        .then(() => log('Directory has beed created at path:', rootDirName))
-        .then(() => utils.loadHtml(url, rootDirName))
+    return utils.loadHtml(url, rootDirName)
         .then((meta) => {
             [assetsDirName, assetsList] = meta
             assetsDirPath = path.join(rootDirName, assetsDirName)
