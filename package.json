@@ -1,6 +1,6 @@
 {
   "name": "@hexlet/code",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "description": "Page Loader",
   "main": "dist/index.js",
   "type": "module",
@@ -8,10 +8,6 @@
   "author": "Alexander Mandrikov <mad.nunsez@gmail.com>",
   "license": "Apache License 2.0",
   "private": true,
-  "scripts": {
-    "install": "make hexlet-checks",
-    "test": "npx jest"
-  },
   "bin": {
     "page-loader": "bin/page-loader.js"
   },
