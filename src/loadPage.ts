@@ -6,10 +6,10 @@ import * as utils from './utils'
 
 const log = debug('page-loader')
 
-const loadPage = (urlStr: string, rootDirName = process.cwd()): Promise<string> => {
+const loadPage = (urlStr: string, rootDirName: string): Promise<string> => {
     const url = utils.parseUrlFromString(urlStr)
     const htmlName = utils.parseUrlName(url)
-    const htmlPath = path.join(rootDirName, htmlName)
+    const htmlPath = path.resolve(rootDirName, htmlName)
 
     let assetsDirName: string
     let assetsDirPath: string
@@ -18,7 +18,7 @@ const loadPage = (urlStr: string, rootDirName = process.cwd()): Promise<string> 
     return utils.loadHtml(url, rootDirName)
         .then((meta) => {
             [assetsDirName, assetsList] = meta
-            assetsDirPath = path.join(rootDirName, assetsDirName)
+            assetsDirPath = path.resolve(rootDirName, assetsDirName)
 
             log('Html has beed downloaded from:', url.href, '\nTo path:', htmlPath)
             log('Assets list:', assetsList.map(({ uri }) => uri.href))
