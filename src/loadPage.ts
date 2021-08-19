@@ -8,7 +8,7 @@ const log = debug('page-loader')
 
 const loadPage = (urlStr: string, rootDirName: string): Promise<string> => {
     const url = utils.parseUrlFromString(urlStr)
-    const htmlName = utils.parseUrlName(url, '.html')
+    const htmlName = utils.parseUrlName(url)
     const htmlPath = path.join(rootDirName, htmlName)
 
     let assetsDirName: string

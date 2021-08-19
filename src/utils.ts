@@ -12,14 +12,14 @@ export const parseUrlFromString = (str: string): URL => {
     return new URL(newStr)
 }
 
-export const parseUrlName = (url: URL, extra = ''): string => {
-    const { hostname, pathname } = url
+export const parseUrlName = (url: URL, extra = '.html'): string => {
     const delimiter = '-'
 
-    const hn = hostname.split('.').filter(Boolean)
-    const pn = decodeURI(pathname).replace(/\.[a-z]+$/, '').split(/_|[^\w]/).filter(Boolean)
+    const { hostname, pathname } = url
+    const { dir, name, ext } = path.parse(decodeURI(pathname))
 
-    const result = hn.concat(...pn).join(delimiter).concat(extra ?? '')
+    const parts = `${hostname}${dir}/${name}`.split(/_|[^\w]/).filter(Boolean)
+    const result = parts.join(delimiter).concat(ext || extra)
 
     return result
 }
@@ -53,11 +53,8 @@ const handleAssets = (htmlContent: string, url: URL, assetsDirName: string)
 
             if (!route) return
 
-            let ext = '.html'
-            ext = path.extname(route) || ext
-
             const uri = new URL(route, url)
-            const assetName = parseUrlName(uri, ext)
+            const assetName = parseUrlName(uri)
             const assetPath = path.join(assetsDirName, assetName)
 
             if (uri.hostname === url.hostname) {
@@ -74,7 +71,7 @@ export const loadHtml = (url: URL, rootDirName: string)
 : Promise<[string, IAsset[]]> => axios.get(url.href).then((response) => {
     const { data: html } = response
 
-    const htmlFileName = parseUrlName(url, '.html')
+    const htmlFileName = parseUrlName(url)
     const htmlFilePath = path.join(rootDirName, htmlFileName)
     const assetsDirName = parseUrlName(url, '_files')
 
