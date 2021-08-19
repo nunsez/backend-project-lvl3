@@ -7,6 +7,7 @@ hexlet-checks:
 	npm install
 	make build
 	npx eslint --no-eslintrc --config eslintrc-hexlet.yml --fix dist
+	sed -i '1i /* eslint-disable indent */' dist/loadPage.js
 
 install-yarn:
 	yarn install
