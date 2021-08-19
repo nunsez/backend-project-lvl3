@@ -6,7 +6,7 @@ import * as utils from './utils'
 
 const log = debug('page-loader')
 
-const loadPage = (urlStr: string, rootDirName: string): Promise<string> => {
+const loadPage = (urlStr: string, rootDirName = process.cwd()): Promise<string> => {
     const url = utils.parseUrlFromString(urlStr)
     const htmlName = utils.parseUrlName(url)
     const htmlPath = path.join(rootDirName, htmlName)
