@@ -8,6 +8,10 @@
   "author": "Alexander Mandrikov <mad.nunsez@gmail.com>",
   "license": "Apache License 2.0",
   "private": true,
+  "scripts": {
+    "install": "make install",
+    "test": "make test"
+  },
   "bin": {
     "page-loader": "bin/page-loader.js"
   },
