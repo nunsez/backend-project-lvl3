@@ -1,6 +1,6 @@
 {
   "name": "@hexlet/code",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Page Loader",
   "main": "dist/index.js",
   "type": "module",
@@ -19,7 +19,8 @@
     "axios-debug-log": "^0.8.4",
     "cheerio": "^1.0.0-rc.10",
     "commander": "^8.1.0",
-    "debug": "^4.3.2"
+    "debug": "^4.3.2",
+    "listr": "^0.14.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
@@ -30,6 +31,7 @@
     "@types/commander": "^2.12.2",
     "@types/debug": "^4.1.7",
     "@types/jest": "^26.0.24",
+    "@types/listr": "^0.14.4",
     "@types/nock": "^11.1.0",
     "@types/node": "^16.4.13",
     "@typescript-eslint/eslint-plugin": "latest",

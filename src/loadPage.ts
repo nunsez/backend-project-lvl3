@@ -4,6 +4,7 @@ import axios from 'axios'
 import 'axios-debug-log'
 import cheerio from 'cheerio'
 import debug from 'debug'
+import Listr from 'listr'
 
 import { parseUrlFromString, parseUrlName } from './utils'
 
@@ -14,11 +15,10 @@ interface IAsset {
     path: string;
 }
 
-const loadAsset = (dirName: string) => (asset: IAsset) => axios
+const loadAsset = (asset: IAsset, dirName: string) => axios
     .get(asset.uri.href, { responseType: 'arraybuffer' })
     .then(({ data }) => {
         const assetPath = path.join(dirName, asset.path)
-        console.log(asset.uri.href)
         log('Asset path:', assetPath)
 
         return fsp.writeFile(assetPath, data)
@@ -87,8 +87,14 @@ const loadPage = (urlStr: string, dirName: string): Promise<string> => {
         .then(() => fsp.mkdir(assetsDirPath))
         .then(() => log('Assets directory has been created at path:', assetsDirPath))
         .then(() => {
-            const promises = assetsList.map(loadAsset(dirName))
-            return Promise.all(promises)
+            const tasks = new Listr(assetsList.map((asset) => {
+                const title = asset.uri.href
+                const task = () => loadAsset(asset, dirName)
+
+                return { title, task }
+            }))
+
+            return tasks.run()
         })
         .then(() => htmlPath)
 

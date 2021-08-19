@@ -16,9 +16,14 @@ program
     .argument('url')
     .action((url, options) => {
         loadPage(url, options.output)
-            .then((filePath) => console.log(filePath))
+            .then((filePath) => {
+                const message = `Page was successfully downloaded into '${filePath}'`
+                process.stdout.write(`${message}\n`)
+                process.exit(0)
+            })
             .catch((error) => {
-                console.error(error.message)
+                const { message } = error
+                process.stderr.write(`${message}\n`)
                 process.exit(1)
             })
     })
