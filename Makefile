@@ -3,14 +3,11 @@ OUTPUTDIR=dist
 
 install: install-yarn build
 
-hexlet-checks: install-npm build
-	yarn eslint --no-eslintrc -c eslintrc-hexlet.yml -ext '.js' --fix .
+hexlet-checks: build
+	yarn eslint --no-eslintrc --config eslintrc-hexlet.yml --fix dist
 
 install-yarn:
 	yarn install
-
-install-npm:
-	npm install
 
 dev:
 	yarn babel src -w -d $(OUTPUTDIR) -x ".ts" --delete-dir-on-start --copy-files

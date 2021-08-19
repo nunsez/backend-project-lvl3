@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 global.console = {
     log: jest.fn(),
     warn: console.warn,
