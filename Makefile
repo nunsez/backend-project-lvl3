@@ -1,11 +1,12 @@
 OUTPUTDIR=dist
 
 
-install: install-deps build
+install: install-yarn build
 
 hexlet-checks: install-npm build
+	yarn eslint --no-eslintrc -c eslintrc-hexlet.yml --fix dist
 
-install-deps:
+install-yarn:
 	yarn install
 
 install-npm:
