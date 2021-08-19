@@ -9,7 +9,7 @@
   "license": "Apache License 2.0",
   "private": true,
   "scripts": {
-    "prepare": "make hexlet-checks",
+    "install": "make hexlet-checks",
     "test": "npx jest"
   },
   "bin": {
