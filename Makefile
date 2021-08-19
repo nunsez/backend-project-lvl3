@@ -3,8 +3,10 @@ OUTPUTDIR=dist
 
 install: install-yarn build
 
-hexlet-checks: install
-	yarn eslint --no-eslintrc --config eslintrc-hexlet.yml --fix dist
+hexlet-checks:
+	npm install
+	make build
+	npx eslint --no-eslintrc --config eslintrc-hexlet.yml --fix dist
 
 install-yarn:
 	yarn install
