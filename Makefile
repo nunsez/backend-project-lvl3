@@ -3,7 +3,7 @@ OUTPUTDIR=dist
 
 install: install-yarn build
 
-hexlet-checks: build
+hexlet-checks: install
 	yarn eslint --no-eslintrc --config eslintrc-hexlet.yml --fix dist
 
 install-yarn:
