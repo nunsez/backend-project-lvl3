@@ -10,11 +10,6 @@ import { parseUrlFromString, parseUrlName } from './utils'
 
 const log = debug('page-loader')
 
-interface IAsset {
-    uri: URL;
-    path: string;
-}
-
 const loadAsset = (asset: IAsset, dirName: string) => axios
     .get(asset.uri.href, { responseType: 'arraybuffer' })
     .then(({ data }) => {
@@ -56,9 +51,7 @@ const handleAssets = (html: string, url: URL, assetsDirName: string) => {
         })
     })
 
-    const newHtml = $.html()
-
-    return { newHtml, assetsList }
+    return { newHtml: $.html(), assetsList }
 }
 
 const loadPage = (urlStr: string, dirName: string): Promise<string> => {
