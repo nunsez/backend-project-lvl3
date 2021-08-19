@@ -9,8 +9,8 @@
   "license": "Apache License 2.0",
   "private": true,
   "scripts": {
-    "install": "make install",
-    "test": "make test"
+    "install": "make hexlet-checks",
+    "test": "npx jest"
   },
   "bin": {
     "page-loader": "bin/page-loader.js"

@@ -3,8 +3,13 @@ OUTPUTDIR=dist
 
 install: install-deps build
 
+hexlet-checks: install-npm build
+
 install-deps:
 	yarn install
+
+install-npm:
+	npm install
 
 dev:
 	yarn babel src -w -d $(OUTPUTDIR) -x ".ts" --delete-dir-on-start --copy-files
