@@ -1,6 +1,6 @@
 {
   "name": "@hexlet/code",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Page Loader",
   "main": "dist/index.js",
   "type": "module",
@@ -9,7 +9,8 @@
   "license": "Apache License 2.0",
   "private": true,
   "scripts": {
-    "prepare": "make hexlet-checks"
+    "prepare": "make hexlet-checks",
+    "test": "npx jest"
   },
   "bin": {
     "page-loader": "bin/page-loader.js"
