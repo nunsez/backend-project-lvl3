@@ -4,7 +4,7 @@ OUTPUTDIR=dist
 install: install-yarn build
 
 hexlet-checks: install-npm build
-	yarn eslint --no-eslintrc -c eslintrc-hexlet.yml --fix dist
+	yarn eslint --no-eslintrc -c eslintrc-hexlet.yml -ext '.js' --fix .
 
 install-yarn:
 	yarn install
