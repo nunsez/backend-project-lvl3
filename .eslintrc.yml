@@ -6,7 +6,6 @@ extends:
   - eslint:recommended
   - plugin:@typescript-eslint/recommended
   - plugin:jest/recommended
-  - airbnb-base
 
 parser: '@typescript-eslint/parser'
 
@@ -15,7 +14,6 @@ parserOptions:
   sourceType: module
 
 plugins:
-  - typescript
   - '@typescript-eslint'
   - jest
 
@@ -28,8 +26,4 @@ rules:
   linebreak-style: [error, unix]
   quotes: [error, single]
   semi: [error, never]
-  import/extensions:
-    - error
-    - ignorePackages
-    - ts: never
-      js: always
+  max-len: [error, code: 100]

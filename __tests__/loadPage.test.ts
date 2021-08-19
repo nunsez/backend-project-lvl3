@@ -45,14 +45,22 @@ describe('http workflow', () => {
             .get('/packs/js/runtime.js').reply(200, defaultScriptContent)
 
         const expectedHtmlFileName = 'ru-hexlet-io-courses.html'
-        const expectedHtmlContent = await fsp.readFile(getFixturePath(expectedHtmlFileName), 'utf-8')
+        const expectedHtmlContent = await fsp.readFile(
+            getFixturePath(expectedHtmlFileName), 'utf-8',
+        )
 
         const customDirPath = path.join(tempDirPath, 'mypath')
         const expectedHtmlFilePath = path.join(customDirPath, expectedHtmlFileName)
         const expectedAssetsDirPath = path.join(customDirPath, 'ru-hexlet-io-courses_files')
-        const expectedImageFilePath = path.join(expectedAssetsDirPath, 'ru-hexlet-io-assets-professions-nodejs.png')
-        const expectedStyleFilePath = path.join(expectedAssetsDirPath, 'ru-hexlet-io-assets-application.css')
-        const expectedScriptFilePath = path.join(expectedAssetsDirPath, 'ru-hexlet-io-packs-js-runtime.js')
+        const expectedImageFilePath = path.join(
+            expectedAssetsDirPath, 'ru-hexlet-io-assets-professions-nodejs.png',
+        )
+        const expectedStyleFilePath = path.join(
+            expectedAssetsDirPath, 'ru-hexlet-io-assets-application.css',
+        )
+        const expectedScriptFilePath = path.join(
+            expectedAssetsDirPath, 'ru-hexlet-io-packs-js-runtime.js',
+        )
 
         const actualHtmlFilePath = await loadPage('https://ru.hexlet.io/courses', customDirPath)
         const actualHtmlContent = await fsp.readFile(actualHtmlFilePath, 'utf-8')

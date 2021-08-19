@@ -3,6 +3,7 @@ import 'axios-debug-log'
 import path from 'path'
 import fsp from 'fs/promises'
 import cheerio from 'cheerio'
+import Listr, { ListrContext } from 'listr'
 
 export const parseUrlFromString = (str: string): URL => {
     const re = /^https?:\/\//
@@ -23,7 +24,34 @@ export const parseUrlName = (url: URL, extra = ''): string => {
     return result
 }
 
-export const loadAsset = (asset: IAsset, dirName: string) => axios
+export const loadHtml = (url: URL, rootDirName: string)
+: Promise<[string, IAsset[]]> => axios.get(url.href).then((response) => {
+    const { data: html } = response
+
+    const htmlFileName = parseUrlName(url, '.html')
+    const htmlFilePath = path.join(rootDirName, htmlFileName)
+    const assetsDirName = parseUrlName(url, '_files')
+
+    const { newHtml, assetsList } = handleAssets(html, url, assetsDirName)
+
+    //
+
+    return fsp.writeFile(htmlFilePath, newHtml, 'utf-8').then(() => [assetsDirName, assetsList])
+})
+
+export const getTasksFromAssets = (assetsList: IAsset[], rootDirName: string)
+: Listr<ListrContext> => {
+    const tasks = new Listr(assetsList.map((asset) => {
+        const title = asset.uri.href
+        const task = () => loadAsset(asset, rootDirName)
+
+        return { title, task }
+    }))
+
+    return tasks
+}
+
+export const loadAsset = (asset: IAsset, dirName: string): Promise<void> => axios
     .get(asset.uri.href, { responseType: 'arraybuffer' })
     .then(({ data }) => {
         const assetPath = path.join(dirName, asset.path)
@@ -37,8 +65,9 @@ const tagSourceMap = {
     script: 'src',
 } as const
 
-export const handleAssets = (html: string, url: URL, assetsDirName: string) => {
-    const $ = cheerio.load(html)
+export const handleAssets = (htmlContent: string, url: URL, assetsDirName: string)
+: { newHtml: string, assetsList: IAsset[] } => {
+    const $ = cheerio.load(htmlContent)
     const assetsList: IAsset[] = []
     const tags = Object.keys(tagSourceMap) as (keyof typeof tagSourceMap)[]
 
