@@ -85,6 +85,7 @@ describe('http workflow', () => {
 
     it('File already exist', async () => {
         nock(/anything/).get('/').twice().reply(200, '<!DOCTYPE html>')
+
         await loadPage('anything', tempDirPath)
 
         await expect(loadPage('anything', tempDirPath)).rejects.toThrowError('EEXIST')
