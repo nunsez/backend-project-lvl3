@@ -24,34 +24,7 @@ export const parseUrlName = (url: URL, extra = ''): string => {
     return result
 }
 
-export const loadHtml = (url: URL, rootDirName: string)
-: Promise<[string, IAsset[]]> => axios.get(url.href).then((response) => {
-    const { data: html } = response
-
-    const htmlFileName = parseUrlName(url, '.html')
-    const htmlFilePath = path.join(rootDirName, htmlFileName)
-    const assetsDirName = parseUrlName(url, '_files')
-
-    const { newHtml, assetsList } = handleAssets(html, url, assetsDirName)
-
-    //
-
-    return fsp.writeFile(htmlFilePath, newHtml, 'utf-8').then(() => [assetsDirName, assetsList])
-})
-
-export const getTasksFromAssets = (assetsList: IAsset[], rootDirName: string)
-: Listr<ListrContext> => {
-    const tasks = new Listr(assetsList.map((asset) => {
-        const title = asset.uri.href
-        const task = () => loadAsset(asset, rootDirName)
-
-        return { title, task }
-    }))
-
-    return tasks
-}
-
-export const loadAsset = (asset: IAsset, dirName: string): Promise<void> => axios
+const loadAsset = (asset: IAsset, dirName: string): Promise<void> => axios
     .get(asset.uri.href, { responseType: 'arraybuffer' })
     .then(({ data }) => {
         const assetPath = path.join(dirName, asset.path)
@@ -65,16 +38,18 @@ const tagSourceMap = {
     script: 'src',
 } as const
 
-export const handleAssets = (htmlContent: string, url: URL, assetsDirName: string)
-: { newHtml: string, assetsList: IAsset[] } => {
+type TagKey = keyof typeof tagSourceMap
+type TagAttrib = typeof tagSourceMap[TagKey]
+
+const handleAssets = (htmlContent: string, url: URL, assetsDirName: string)
+: [string, IAsset[]] => {
     const $ = cheerio.load(htmlContent)
     const assetsList: IAsset[] = []
-    const tags = Object.keys(tagSourceMap) as (keyof typeof tagSourceMap)[]
+    const entries = Object.entries(tagSourceMap) as [TagKey, TagAttrib][]
 
-    tags.forEach((tag) => {
-        $(tag).each((_, el) => {
-            const sourceAttrName = tagSourceMap[tag]
-            const route = $(el).attr(sourceAttrName)
+    entries.forEach(([tagName, attrName]) => {
+        $(tagName).each((_, el) => {
+            const route = $(el).attr(attrName)
 
             if (!route) return
 
@@ -87,10 +62,36 @@ export const handleAssets = (htmlContent: string, url: URL, assetsDirName: strin
 
             if (uri.hostname === url.hostname) {
                 assetsList.push({ uri, path: assetPath })
-                $(el).attr(sourceAttrName, assetPath)
+                $(el).attr(attrName, assetPath)
             }
         })
     })
 
-    return { newHtml: $.html(), assetsList }
+    return [$.html(), assetsList]
+}
+
+export const loadHtml = (url: URL, rootDirName: string)
+: Promise<[string, IAsset[]]> => axios.get(url.href).then((response) => {
+    const { data: html } = response
+
+    const htmlFileName = parseUrlName(url, '.html')
+    const htmlFilePath = path.join(rootDirName, htmlFileName)
+    const assetsDirName = parseUrlName(url, '_files')
+
+    const [newHtml, assetsList] = handleAssets(html, url, assetsDirName)
+
+    return fsp.writeFile(htmlFilePath, newHtml, 'utf-8')
+        .then(() => [assetsDirName, assetsList])
+})
+
+export const getTasksFromAssets = (assetsList: IAsset[], rootDirName: string)
+: Listr<ListrContext> => {
+    const tasks = new Listr(assetsList.map((asset) => {
+        const title = asset.uri.href
+        const task = () => loadAsset(asset, rootDirName)
+
+        return { title, task }
+    }))
+
+    return tasks
 }
