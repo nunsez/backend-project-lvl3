@@ -1,6 +1,6 @@
 {
   "name": "@hexlet/code",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "description": "Page Loader",
   "main": "dist/index.js",
   "type": "module",
@@ -10,6 +10,10 @@
   "private": true,
   "bin": {
     "page-loader": "bin/page-loader.js"
+  },
+  "engines": {
+    "node": ">=16",
+    "yarn": ">=1.22"
   },
   "dependencies": {
     "axios": "^0.21.1",

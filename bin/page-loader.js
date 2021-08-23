@@ -9,7 +9,7 @@ const CWD = process.cwd()
 const program = new Command()
 
 program
-    .version('0.0.1')
+    .version('1.0.0')
     .description('Page loader utility')
     .option('-o, --output [dir]', 'output dir', CWD)
 

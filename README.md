@@ -13,6 +13,11 @@
 - Parallel downloading of assets
 - Showing download progress
 
+## Requirements
+- GNU Make
+- Node (v.16+)
+- Yarn (v.1.22+)
+
 ## Install
 
 ```sh
@@ -29,22 +34,16 @@ make test
 make test-coverage
 ```
 
-## PageLoader API
-
-You can import the utility as a Promise:
-
-```javascript
-import pageLoader from 'pageLoader';
-
-pageLoader(url, dirName).then((htmlPath) => console.log(htmlPath));
-```
-
-First arguments `<url>` is the string of web page address. It's required.
-
-The second argument `[dirName]` is a string and is optional. It determines in which directory on your filesystem the page will be loaded.
-The default value is the current directory (`process.cwd()`)
-
 ## Usage examples
 
 ### Output help information
-_...work in progress_
+
+[![asciicast](https://asciinema.org/a/431722.svg)](https://asciinema.org/a/431722)
+
+### Workflow
+
+[![asciicast](https://asciinema.org/a/431719.svg)](https://asciinema.org/a/431719)
+
+### Debug
+
+[![asciicast](https://asciinema.org/a/431720.svg)](https://asciinema.org/a/431720)
