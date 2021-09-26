@@ -10,7 +10,6 @@
 **Utility features:**
 
 - Support the directory choice to save the page
-- Parallel downloading of assets
 - Showing download progress
 
 ## Requirements
